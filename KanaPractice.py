@@ -16,31 +16,50 @@ def GetRandomKana(kana):
 
 
 Window = tk.Tk()
-Window.minsize(500,300)
+Window.minsize(500, 280)
 
-MainFrame = ttk.Frame(Window, width=400, height=300)
-MainFrame.pack(pady=5)
+MainFrame = tk.Frame(Window)
+MainFrame.pack()
 
+RomajiLabel = tk.Label(MainFrame, text="R", font=("Segoe UI", 100), width=3, background="white")
+RomajiLabel.grid(row=0, column=0, padx=10, pady=25)
 
+KanaLabel = tk.Label(MainFrame, text="K", font=("Segoe UI", 100), width=3, background="white")
+KanaLabel.grid(row=0, column=1,  padx=10, pady=25)
 
-RomajiLabel = ttk.Label(MainFrame, text="R")
-RomajiLabel.grid(row=0, column=0)
+ButtonFrame = tk.Frame(MainFrame, background="blue", height=100)
+ButtonFrame.grid(row=1, column=0, columnspan=2)
 
-KanaLabel = ttk.Label(MainFrame, text="K")
-KanaLabel.grid(row=0, column=1)
+EventBool = True
 
+def StopEvent():
+    global EventBool
+    EventBool = False
+
+def StarEvent():
+    global EventBool
+    EventBool = True
 
 def RandomButtonEvent():
-    R, K = GetRandomKana(hiragana)
-    RomajiLabel.config(text=R)
-    KanaLabel.config(text=K)
+    if EventBool:
+        R, K = GetRandomKana(hiragana)
+        RomajiLabel.config(text=R)
+        KanaLabel.config(text="")
+        KanaLabel.after(1000, lambda: KanaLabel.config(text="1"))
+        KanaLabel.after(2000, lambda: KanaLabel.config(text="2"))
+        KanaLabel.after(3000, lambda: KanaLabel.config(text="3"))
+        KanaLabel.after(4000, lambda: KanaLabel.config(text=K))
+
+        RandomButton.config(text="STOP", command=StopEvent)
+
+        Window.after(5000, RandomButtonEvent)
+    
+    else:
+        StarEvent()
+        RandomButton.config(text="RANDOM", command=RandomButtonEvent)
 
 
-RandomButton = ttk.Button(MainFrame, text="RANDOM", command=RandomButtonEvent)
-RandomButton.grid(row=1, column=0, columnspan=2)
-
-
-
-
+RandomButton = ttk.Button(ButtonFrame, text="RANDOM", command=RandomButtonEvent)
+RandomButton.pack()
 
 Window.mainloop()
