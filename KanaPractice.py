@@ -8,10 +8,18 @@ import tkinter.ttk as ttk
 with open("Kana/hiragana.json", encoding="utf-8") as hiraganaJSON:
     hiragana = json.load(hiraganaJSON)
 
+Pool = []
+
 def GetRandomKana(kana):
-    n = len(kana)
-    k = rd.randrange(n)
+    global Pool
+    if len(Pool) == 0:
+        n = len(kana)
+        Pool = list(range(n))
+
+    k = rd.choice(Pool)
+    Pool.remove(k)
     key = list(kana)[k]
+
     return (key, kana[key])
 
 
